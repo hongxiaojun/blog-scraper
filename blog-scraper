@@ -1,0 +1,98 @@
+#!/bin/bash
+# Blog Scraper Skill - 通用博客文章抓取器
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PYTHON_SCRIPT="$SCRIPT_DIR/blog_scraper.py"
+
+# 检查依赖
+check_dependencies() {
+    local missing_deps=()
+
+    # 检查 Python
+    if ! command -v python3 &> /dev/null; then
+        echo "错误: 未找到 Python3"
+        return 1
+    fi
+
+    # 检查 Selenium
+    if ! python3 -c "import selenium" 2>/dev/null; then
+        missing_deps+=("selenium")
+    fi
+
+    # 检查 html2text
+    if ! python3 -c "import html2text" 2>/dev/null; then
+        missing_deps+=("html2text")
+    fi
+
+    # 检查 beautifulsoup4
+    if ! python3 -c "import bs4" 2>/dev/null; then
+        missing_deps+=("beautifulsoup4")
+    fi
+
+    if [ ${#missing_deps[@]} -gt 0 ]; then
+        echo "缺少依赖: ${missing_deps[*]}"
+        echo "安装命令:"
+        echo "pip3 install --break-system-packages ${missing_deps[*]}"
+        return 1
+    fi
+
+    return 0
+}
+
+# 显示帮助
+show_help() {
+    cat << 'EOF'
+通用博客文章抓取器
+
+使用:
+  /blog-scraper <URL> [选项]
+
+参数:
+  URL                  博客网址（必需）
+
+选项:
+  -o, --output DIR     输出目录（默认: ./blog_articles）
+  -n, --number N       抓取数量限制
+  --no-headless        显示浏览器（调试用）
+  --ai                 启用 AI 摘要
+  --reset              重置进度重新抓取
+  -h, --help           显示此帮助
+
+示例:
+  /blog-scraper https://example.com
+  /blog-scraper https://blog.example.com -o ~/my_blog
+  /blog-scraper https://example.com -n 10 --ai
+  /blog-scraper https://example.com --no-headless
+
+支持的博客类型:
+  - WordPress
+  - Ghost
+  - Medium
+  - Substack
+  - Hugo/Jekyll
+  - 通用博客
+
+配置文件:
+  ~/.claude/skills/blog-scraper/config.json
+
+EOF
+}
+
+# 主函数
+main() {
+    # 检查依赖
+    if ! check_dependencies; then
+        exit 1
+    fi
+
+    # 如果没有参数或请求帮助
+    if [ $# -eq 0 ] || [[ "$1" == "-h" ]] || [[ "$1" == "--help" ]]; then
+        show_help
+        exit 0
+    fi
+
+    # 运行 Python 脚本
+    python3 "$PYTHON_SCRIPT" "$@"
+}
+
+main "$@"
