@@ -1,6 +1,12 @@
 # Blog Scraper Skill
 
-通用博客文章抓取器 - 自动识别、提取、保存博客文章为 Markdown 格式。
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Python 3.14+](https://img.shields.io/badge/python-3.14+-blue.svg)](https://www.python.org/downloads/)
+[![Claude Code](https://img.shields.io/badge/Claude--Code-1.0.0-green.svg)](https://github.com/anthropics/claude-code)
+
+> 通用博客文章抓取器 - 自动识别、提取、保存博客文章为 Markdown 格式
+
+支持 WordPress、Ghost、Medium、Substack、Hugo/Jekyll 等主流博客平台。
 
 ## 安装
 
